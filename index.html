@@ -1,0 +1,560 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>اختبار معرفي صعب</title>
+    <style>
+        /* CSS ستأتي هنا */
+        :root {
+            --primary-color: #4a148c;
+            --secondary-color: #7b1fa2;
+            --accent-color: #e1bee7;
+            --text-color: #333;
+            --light-color: #f5f5f5;
+        }
+        
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Tajawal', sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            color: var(--text-color);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        @font-face {
+            font-family: 'Tajawal';
+            src: url('https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700&display=swap');
+        }
+        
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background-color: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+        
+        header {
+            background: linear-gradient(to right, var(--primary-color), var(--secondary-color));
+            color: white;
+            padding: 25px;
+            text-align: center;
+            position: relative;
+        }
+        
+        header h1 {
+            font-size: 28px;
+            margin-bottom: 10px;
+        }
+        
+        header p {
+            opacity: 0.9;
+        }
+        
+        .decoration {
+            position: absolute;
+            width: 100px;
+            height: 100px;
+            background-color: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+        }
+        
+        .dec-1 {
+            top: -30px;
+            left: -30px;
+        }
+        
+        .dec-2 {
+            bottom: -40px;
+            right: -40px;
+            width: 150px;
+            height: 150px;
+        }
+        
+        .quiz-container {
+            padding: 30px;
+        }
+        
+        .question {
+            margin-bottom: 25px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #eee;
+            animation: fadeIn 0.5s ease;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .question h3 {
+            margin-bottom: 15px;
+            color: var(--primary-color);
+            font-size: 20px;
+        }
+        
+        .options {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+        
+        @media (max-width: 600px) {
+            .options {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        .option {
+            background-color: var(--light-color);
+            padding: 12px 15px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            border: 2px solid transparent;
+        }
+        
+        .option:hover {
+            background-color: #e9e9e9;
+        }
+        
+        .option.selected {
+            border-color: var(--secondary-color);
+            background-color: var(--accent-color);
+        }
+        
+        .option.correct {
+            border-color: #4caf50;
+            background-color: #e8f5e9;
+        }
+        
+        .option.incorrect {
+            border-color: #f44336;
+            background-color: #ffebee;
+        }
+        
+        .hint {
+            font-size: 14px;
+            color: #666;
+            margin-top: 10px;
+            padding: 10px;
+            background-color: #fff9c4;
+            border-right: 4px solid #ffd600;
+            display: none;
+        }
+        
+        .show-hint {
+            background: none;
+            border: none;
+            color: var(--secondary-color);
+            cursor: pointer;
+            font-size: 14px;
+            margin-top: 10px;
+            text-decoration: underline;
+        }
+        
+        .navigation {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 30px;
+        }
+        
+        button {
+            background: linear-gradient(to right, var(--primary-color), var(--secondary-color));
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 30px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 10px rgba(0, 0, 0, 0.15);
+        }
+        
+        button:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+        
+        .progress-container {
+            margin-bottom: 30px;
+        }
+        
+        .progress-bar {
+            height: 8px;
+            background-color: #e0e0e0;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+        
+        .progress {
+            height: 100%;
+            background: linear-gradient(to right, var(--primary-color), var(--secondary-color));
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+        
+        .progress-text {
+            text-align: left;
+            margin-bottom: 5px;
+            font-size: 14px;
+            color: #666;
+        }
+        
+        .result-container {
+            text-align: center;
+            padding: 30px;
+            display: none;
+        }
+        
+        .result-container h2 {
+            color: var(--primary-color);
+            margin-bottom: 20px;
+            font-size: 28px;
+        }
+        
+        .score {
+            font-size: 60px;
+            font-weight: bold;
+            color: var(--secondary-color);
+            margin: 20px 0;
+        }
+        
+        .restart-btn {
+            margin-top: 30px;
+        }
+        
+        .confetti {
+            position: fixed;
+            width: 10px;
+            height: 10px;
+            background-color: #f00;
+            border-radius: 50%;
+            animation: fall 5s linear infinite;
+            z-index: 1000;
+        }
+        
+        @keyframes fall {
+            0% {
+                transform: translateY(-100vh) rotate(0deg);
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(100vh) rotate(360deg);
+                opacity: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="decoration dec-1"></div>
+            <div class="decoration dec-2"></div>
+            <h1>اختبار معرفي صعب</h1>
+            <p>اختبر معلوماتك مع أسئلة صعبة ومتحدية</p>
+        </header>
+        
+        <div class="progress-container">
+            <div class="progress-text">التقدم: <span id="current-q">1</span> من <span id="total-q">25</span></div>
+            <div class="progress-bar">
+                <div class="progress" id="progress"></div>
+            </div>
+        </div>
+        
+        <div class="quiz-container" id="quiz">
+            <!-- الأسئلة سيتم إضافتها بواسطة JavaScript -->
+        </div>
+        
+        <div class="result-container" id="result">
+            <h2>نتيجة الاختبار</h2>
+            <div class="score" id="score">0%</div>
+            <p id="result-message"></p>
+            <button class="restart-btn" id="restart">إعادة الاختبار</button>
+        </div>
+    </div>
+
+    <script>
+        // الأسئلة الصعبة مع التلميحات
+        const questions = [
+            {
+                question: "في علم الحديث، ما المصطلح الذي يطلق على الحديث الذي ينفرد بروايته راوٍ واحد في أي طبقة من طبقات السند؟",
+                options: ["الحديث الغريب", "الحديث المنكر", "الحديث المعلل", "الحديث الشاذ"],
+                answer: 0,
+                hint: "هذا النوع من الأحاديث يكون له طرق مختلفة لكنه ينفرد براوٍ واحد في إحدى الطبقات"
+            },
+            {
+                question: "من هو الصحابي الذي ذكر في القرآن الكريم صراحة باسمه؟",
+                options: ["عمر بن الخطاب", "زيد بن حارثة", "بلال بن رباح", "سعد بن أبي وقاص"],
+                answer: 1,
+                hint: "ذكر في سورة الأحزاب وهو الوحيد من الصحابة الذي ذكر باسمه في القرآن"
+            },
+            {
+                question: "ما هي السورة التي تسمى 'قلب القرآن'؟",
+                options: ["سورة البقرة", "سورة يس", "سورة الرحمن", "سورة الكهف"],
+                answer: 1,
+                hint: "هذه السورة مكونة من 83 آية وتقع في الجزء الثاني والعشرين من القرآن"
+            },
+            {
+                question: "كم عدد المرات التي ذكر فيها اسم 'محمد' صلى الله عليه وسلم في القرآن الكريم؟",
+                options: ["مرة واحدة", "أربع مرات", "ست مرات", "لم يذكر باسمه الصريح"],
+                answer: 1,
+                hint: "ذكر في سور آل عمران والأحزاب ومحمد والفتح"
+            },
+            {
+                question: "ما هي أطول كلمة في القرآن الكريم من حيث عدد الحروف؟",
+                options: ["فأسقيناكموه", "فسيكفيكهم", "فاستقيموا إليه", "فأنجيناه وأصحاب السفينة"],
+                answer: 0,
+                hint: "تتكون من 11 حرفًا وتوجد في سورة الحجر"
+            },
+            {
+                question: "من هو الصحابي الذي اهتز لموته عرش الرحمن؟",
+                options: ["أبو بكر الصديق", "عمر بن الخطاب", "عثمان بن عفان", "سعد بن معاذ"],
+                answer: 3,
+                hint: "كان من زعماء الأوس وتوفي متأثرًا بجراحه في غزوة الخندق"
+            },
+            {
+                question: "ما هي السورة التي تسمى 'عروس القرآن'؟",
+                options: ["سورة النور", "سورة الرحمن", "سورة الفتح", "سورة يس"],
+                answer: 1,
+                hint: "اشتهرت هذه السورة بذكر نعم الله المتعددة وتكرار آية 'فبأي آلاء ربكما تكذبان'"
+            },
+            {
+                question: "كم عدد آيات سورة البقرة؟",
+                options: ["286 آية", "255 آية", "300 آية", "276 آية"],
+                answer: 0,
+                hint: "هي أطول سور القرآن وتحتوي على آية الكرسي التي تعد أعظم آية في القرآن"
+            },
+            {
+                question: "من هو أول من جهر بالقرآن الكريم في مكة؟",
+                options: ["عمر بن الخطاب", "عبد الله بن مسعود", "بلال بن رباح", "أبو بكر الصديق"],
+                answer: 1,
+                hint: "كان من السابقين إلى الإسلام وهاجر الهجرتين وجاهد مع النبي صلى الله عليه وسلم"
+            },
+            {
+                question: "ما هي السورة التي تسمى 'سورة الحواريين'؟",
+                options: ["سورة الصف", "سورة المائدة", "سورة آل عمران", "سورة التوبة"],
+                answer: 0,
+                hint: "تسمى بهذا الاسم لأنها ذكرت قصة الحواريين مع عيسى عليه السلام"
+            },
+            {
+                question: "كم مرة ذكرت كلمة 'الشهر' في القرآن الكريم؟",
+                options: ["10 مرات", "12 مرة", "15 مرة", "20 مرة"],
+                answer: 1,
+                hint: "تتعلق معظم هذه الآيات بأحكام الصيام والحج والأهلة"
+            },
+            {
+                question: "من هو الصحابي الذي قال عنه النبي صلى الله عليه وسلم: 'هذا خالي فليرني امرؤ خاله'؟",
+                options: ["الزبير بن العوام", "سعد بن أبي وقاص", "جعفر بن أبي طالب", "عبد الرحمن بن عوف"],
+                answer: 0,
+                hint: "هو ابن عمة النبي صلى الله عليه وسلم وأحد العشرة المبشرين بالجنة"
+            },
+            {
+                question: "ما هي السورة التي تسمى 'الفاضحة'؟",
+                options: ["سورة التوبة", "سورة النور", "سورة التحریم", "سورة الحجرات"],
+                answer: 2,
+                hint: "سميت بذلك لأنها فضحت المنافقين وبينت بعض أسرارهم"
+            },
+            {
+                question: "كم عدد السجدات في القرآن الكريم؟",
+                options: ["10 سجدات", "12 سجدة", "14 سجدة", "15 سجدة"],
+                answer: 2,
+                hint: "إحداها سجدة شكر وليس سجدة تلاوة وتوجد في سورة ص"
+            },
+            {
+                question: "من هي المرأة التي ذكر اسمها في القرآن الكريم؟",
+                options: ["خديجة بنت خويلد", "عائشة بنت أبي بكر", "مريم بنت عمران", "فاطمة بنت محمد"],
+                answer: 2,
+                hint: "ذكرت في سورة مريم وهي أم نبي الله عيسى عليه السلام"
+            },
+            {
+                question: "ما هي السورة التي تبدأ بذكر أربع من نعم الله على الإنسان؟",
+                options: ["سورة النحل", "سورة الرحمن", "سورة العلق", "سورة القلم"],
+                answer: 1,
+                hint: "تبدأ هذه السورة بالرحمن وتكرر فيها الآية 'فبأي آلاء ربكما تكذبان'"
+            },
+            {
+                question: "من هو الصحابي الذي كانت الملائكة تسلم عليه؟",
+                options: ["عمران بن حصين", "حذيفة بن اليمان", "عبد الله بن سلام", "أبو الدرداء"],
+                answer: 0,
+                hint: "كان من الصحابة الذين عاشوا في البصرة وتوفي فيها سنة 52 هـ"
+            },
+            {
+                question: "ما هي السورة التي تسمى 'المجادلة' و'الظهار'؟",
+                options: ["سورة المجادلة", "سورة الطلاق", "سورة التحريم", "سورة النساء"],
+                answer: 0,
+                hint: "نزلت في خولة بنت ثابت وزوجها أوس بن الصامت"
+            },
+            {
+                question: "كم عدد الأنبياء الذين ذكروا في القرآن الكريم؟",
+                options: ["20 نبيًا", "25 نبيًا", "30 نبيًا", "35 نبيًا"],
+                answer: 1,
+                hint: "ذكر بعضهم في آية واحدة في سورة الأنعام"
+            },
+            {
+                question: "من هو الصحابي الذي قال عنه النبي صلى الله عليه وسلم: 'أرحم أمتي بأمتي أبو بكر'؟",
+                options: ["عمر بن الخطاب", "عثمان بن عفان", "علي بن أبي طالب", "أبو بكر الصديق"],
+                answer: 3,
+                hint: "هو أول الخلفاء الراشدين وأحب الناس إلى النبي صلى الله عليه وسلم بعد زوجته عائشة"
+            },
+            {
+                question: "ما هي السورة التي تسمى 'المسبحات'؟",
+                options: ["السور التي تبدأ بـ'سبح'", "السور التي تبدأ بـ'يسبح'", "السور التي تبدأ بـ'سبحان'", "السور التي تذكر التسبيح كثيرًا"],
+                answer: 0,
+                hint: "هي سبع سور: الحديد والحشر والصف والجمعة والتغابن والأعلى والحديد"
+            },
+            {
+                question: "كم عدد المرات التي ذكر فيها اسم 'عيسى' عليه السلام في القرآن الكريم؟",
+                options: ["25 مرة", "30 مرة", "35 مرة", "40 مرة"],
+                answer: 0,
+                hint: "ذكر باسم 'عيسى' و'المسيح' و'ابن مريم'"
+            },
+            {
+                question: "من هو الصحابي الذي دعا له النبي صلى الله عليه وسلم: 'اللهم فقهه في الدين وعلمه التأويل'؟",
+                options: ["عبد الله بن عباس", "عبد الله بن مسعود", "معاذ بن جبل", "زيد بن ثابت"],
+                answer: 0,
+                hint: "كان يسمى 'ترجمان القرآن' و'حبر الأمة'"
+            },
+            {
+                question: "ما هي السورة التي تسمى 'المنقذة'؟",
+                options: ["سورة الملك", "سورة الدخان", "سورة الواقعة", "سورة يس"],
+                answer: 0,
+                hint: "تسمى بهذا الاسم لأنها تنقذ صاحبها من عذاب القبر"
+            },
+            {
+                question: "كم عدد السور التي افتتحت بـ'الحمد لله'؟",
+                options: ["4 سور", "5 سور", "6 سور", "7 سور"],
+                answer: 1,
+                hint: "هي: الفاتحة والأنعام والكهف وسبأ وفاطر"
+            }
+        ];
+
+        // عناصر DOM
+        const quizContainer = document.getElementById('quiz');
+        const resultContainer = document.getElementById('result');
+        const scoreElement = document.getElementById('score');
+        const resultMessage = document.getElementById('result-message');
+        const restartButton = document.getElementById('restart');
+        const currentQElement = document.getElementById('current-q');
+        const totalQElement = document.getElementById('total-q');
+        const progressBar = document.getElementById('progress');
+
+        // متغيرات الحالة
+        let currentQuestion = 0;
+        let score = 0;
+        let userAnswers = Array(questions.length).fill(null);
+
+        // تهيئة الاختبار
+        function initQuiz() {
+            totalQElement.textContent = questions.length;
+            showQuestion();
+        }
+
+        // عرض السؤال الحالي
+        function showQuestion() {
+            if (currentQuestion >= questions.length) {
+                showResult();
+                return;
+            }
+
+            currentQElement.textContent = currentQuestion + 1;
+            progressBar.style.width = `${((currentQuestion + 1) / questions.length) * 100}%`;
+
+            const question = questions[currentQuestion];
+            const questionHTML = `
+                <div class="question">
+                    <h3>${currentQuestion + 1}. ${question.question}</h3>
+                    <div class="options">
+                        ${question.options.map((option, index) => `
+                            <div class="option ${userAnswers[currentQuestion] === index ? 'selected' : ''}" data-index="${index}">
+                                ${String.fromCharCode(1633 + index)}. ${option}
+                            </div>
+                        `).join('')}
+                    </div>
+                    <button class="show-hint">إظهار التلميح</button>
+                    <div class="hint">${question.hint}</div>
+                </div>
+                <div class="navigation">
+                    <button id="prev" ${currentQuestion === 0 ? 'disabled' : ''}>السابق</button>
+                    <button id="next" ${currentQuestion === questions.length - 1 ? '' : 'disabled'}>${currentQuestion === questions.length - 1 ? 'عرض النتيجة' : 'التالي'}</button>
+                </div>
+            `;
+
+            quizContainer.innerHTML = questionHTML;
+
+            // إضافة مستمعي الأحداث
+            document.querySelectorAll('.option').forEach(option => {
+                option.addEventListener('click', selectAnswer);
+            });
+
+            document.querySelector('.show-hint').addEventListener('click', toggleHint);
+            document.getElementById('prev').addEventListener('click', prevQuestion);
+            document.getElementById('next').addEventListener('click', nextQuestion);
+        }
+
+        // اختيار الإجابة
+        function selectAnswer(e) {
+            const selectedOption = e.currentTarget;
+            const options = document.querySelectorAll('.option');
+            const answerIndex = parseInt(selectedOption.dataset.index);
+
+            // إزالة التحديد من جميع الخيارات
+            options.forEach(option => {
+                option.classList.remove('selected');
+            });
+
+            // تحديد الخيار المختار
+            selectedOption.classList.add('selected');
+            userAnswers[currentQuestion] = answerIndex;
+
+            // تمكين زر التالي
+            document.getElementById('next').disabled = false;
+        }
+
+        // عرض/إخفاء التلميح
+        function toggleHint() {
+            const hint = document.querySelector('.hint');
+            const hintButton = document.querySelector('.show-hint');
+
+            if (hint.style.display === 'block') {
+                hint.style.display = 'none';
+                hintButton.textContent = 'إظهار التلميح';
+            } else {
+                hint.style.display = 'block';
+                hintButton.textContent = 'إخفاء التلميح';
+            }
+        }
+
+        // السؤال السابق
+        function prevQuestion() {
+            if (currentQuestion > 0) {
+                currentQuestion--;
+                showQuestion();
+            }
+        }
+
+        // السؤال التالي
+        function nextQuestion() {
+            if (currentQuestion < questions.length - 1) {
+                currentQuestion++;
+                showQuestion();
+            } else {
+                calculateScore();
+                showR
