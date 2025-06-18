@@ -557,4 +557,71 @@
                 showQuestion();
             } else {
                 calculateScore();
-                showR
+                showResult();
+            }
+        }
+
+        // حساب النتيجة
+        function calculateScore() {
+            score = 0;
+            for (let i = 0; i < questions.length; i++) {
+                if (userAnswers[i] === questions[i].answer) {
+                    score++;
+                }
+            }
+        }
+
+        // عرض النتيجة
+        function showResult() {
+            quizContainer.style.display = 'none';
+            resultContainer.style.display = 'block';
+
+            const percentage = Math.round((score / questions.length) * 100);
+            scoreElement.textContent = `${percentage}%`;
+
+            if (percentage >= 80) {
+                resultMessage.textContent = 'ممتاز! لديك معرفة رائعة، أحسنت!';
+                createConfetti();
+            } else if (percentage >= 60) {
+                resultMessage.textContent = 'جيد جدًا! لديك معرفة قوية ولكن يمكنك التحسين.';
+            } else if (percentage >= 40) {
+                resultMessage.textContent = 'ليس سيئًا، ولكن تحتاج إلى مزيد من الدراسة والمراجعة.';
+            } else {
+                resultMessage.textContent = 'يبدو أنك بحاجة إلى مراجعة المواد الدراسية مرة أخرى.';
+            }
+        }
+
+        // إنشاء تأثير الكونفيتي للاحتفال
+        function createConfetti() {
+            const colors = ['#f44336', '#e91e63', '#9c27b0', '#673ab7', '#3f51b5', '#2196f3', '#03a9f4', '#00bcd4', '#009688', '#4CAF50', '#8BC34A', '#CDDC39', '#FFEB3B', '#FFC107', '#FF9800', '#FF5722'];
+
+            for (let i = 0; i < 100; i++) {
+                const confetti = document.createElement('div');
+                confetti.className = 'confetti';
+                confetti.style.left = `${Math.random() * 100}vw`;
+                confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+                confetti.style.animationDuration = `${Math.random() * 3 + 2}s`;
+                confetti.style.animationDelay = `${Math.random() * 0.5}s`;
+                document.body.appendChild(confetti);
+
+                setTimeout(() => {
+                    confetti.remove();
+                }, 5000);
+            }
+        }
+
+        // إعادة بدء الاختبار
+        restartButton.addEventListener('click', () => {
+            currentQuestion = 0;
+            score = 0;
+            userAnswers = Array(questions.length).fill(null);
+            quizContainer.style.display = 'block';
+            resultContainer.style.display = 'none';
+            showQuestion();
+        });
+
+        // بدء الاختبار
+        initQuiz();
+    </script>
+</body>
+</html>
